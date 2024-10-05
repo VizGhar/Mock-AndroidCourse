@@ -1,0 +1,29 @@
+services:
+  mockoon:
+    image: mockoon/cli:latest
+    container_name: mockoon-server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mockoon.json:/data/mockoon-environment.json
+    command: --data /data/mockoon-environment.json --port 3000
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8080:8080"
+    environment:
+      SWAGGER_JSON: /docs/mockoon-api-spec.yaml
+    volumes:
+      - ./swagger.json:/docs/mockoon-api-spec.yaml
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-static-server
+    ports:
+      - "3001:80"
+    volumes:
+      - ./static:/usr/share/nginx/html
+    restart: always
+

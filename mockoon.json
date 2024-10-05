@@ -1,0 +1,376 @@
+{
+    "uuid": "ee6b98fb-c445-43f4-8344-c9d003187fd2",
+    "lastMigration": 32,
+    "name": "Demo API",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3000,
+    "hostname": "",
+    "folders": [],
+    "routes": [
+        {
+            "uuid": "0807de7d-e3ad-4dd6-ac1c-5dd6fb40f840",
+            "type": "crud",
+            "documentation": "Endpoint performing CRUD operations on a data bucket (automatically creates GET, POST, PUT, DELETE routes)",
+            "method": "",
+            "endpoint": "users",
+            "responses": [
+                {
+                    "uuid": "76337bab-90ca-43c3-b29a-b91d2d35f202",
+                    "body": "{}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "Perform CRUD operations on the \"Users\" databucket (\"Data\" tab at the top)",
+                    "headers": [],
+                    "bodyType": "DATABUCKET",
+                    "filePath": "",
+                    "databucketID": "jjuf",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id",
+                    "callbacks": []
+                }
+            ],
+            "responseMode": null
+        },
+        {
+            "uuid": "131472d0-9f77-45d7-ad86-75bc301ef578",
+            "type": "http",
+            "documentation": "Generate random body (JSON, text, CSV, etc) with templating",
+            "method": "get",
+            "endpoint": "template",
+            "responses": [
+                {
+                    "uuid": "4f002634-a949-47c1-9f6c-9fc4386e9e85",
+                    "body": "{\n  \"Templating example\": \"For more information about templating, click the blue 'i' above this editor\",\n  \"users\": [\n    {{# repeat (queryParam 'total' '10') }}\n      {\n        \"userId\": \"{{ faker 'number.int' min=10000 max=100000 }}\",\n        \"firstname\": \"{{ faker 'person.firstName' }}\",\n        \"lastname\": \"{{ faker 'person.lastName' }}\",\n        \"friends\": [\n          {{# repeat (faker 'number.int' 5) }}\n            {\n              \"id\": \"{{ faker 'string.uuid' }}\"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  \"total\": \"{{queryParam 'total' '10'}}\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "Creates 10 random users, or the amount specified in the 'total' query param",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id",
+                    "callbacks": []
+                }
+            ],
+            "responseMode": null
+        },
+        {
+            "uuid": "aadfb358-3156-4112-8cbc-ade5ed4777dd",
+            "type": "http",
+            "documentation": "Use multiple responses with rules",
+            "method": "post",
+            "endpoint": "content/:param1",
+            "responses": [
+                {
+                    "uuid": "3e38676a-4339-4c03-af81-ba6574880ceb",
+                    "body": "{\n  \"Rules example\": \"Default response. Served if route param 'param1' is not present.\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "Default response",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": true,
+                    "crudKey": "id",
+                    "callbacks": []
+                },
+                {
+                    "uuid": "d5783a99-a0c5-4c77-a91f-73a029fb8219",
+                    "body": "{\n  \"Rules example\": \"Content XYZ. Served if route param 'param1' equals 'xyz'. (See in 'Rules' tab)\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "Content XYZ",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "param1",
+                            "value": "xyz",
+                            "invert": false,
+                            "operator": "equals"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id",
+                    "callbacks": []
+                },
+                {
+                    "uuid": "8f7f6b50-a45a-4778-b15d-7e2dd701a6a6",
+                    "body": "{\n  \"Rules example\": \"Content not found. Served if route param 'param1' is not equal to 'xyz'. (See in 'Rules' tab)\"\n}\n",
+                    "latency": 0,
+                    "statusCode": 404,
+                    "label": "Content not found",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "params",
+                            "modifier": "param1",
+                            "value": "^(?!.*xyz).*$",
+                            "invert": false,
+                            "operator": "regex"
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id",
+                    "callbacks": []
+                }
+            ],
+            "responseMode": null
+        },
+        {
+            "uuid": "40fa354a-b867-42c8-b92c-fa6fcd790827",
+            "type": "http",
+            "documentation": "Path supports various patterns",
+            "method": "put",
+            "endpoint": "path/with/pattern(s)?/*",
+            "responses": [
+                {
+                    "uuid": "ff54f38f-8c75-4e5a-a89b-2110c0dc69e7",
+                    "body": "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/api-endpoints/routing/",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "text/plain"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id",
+                    "callbacks": []
+                }
+            ],
+            "responseMode": null
+        },
+        {
+            "uuid": "bae427cb-4c84-41e7-a292-e4a278622fb6",
+            "type": "http",
+            "documentation": "\"Guard\" route protecting all routes starting with /protected/",
+            "method": "all",
+            "endpoint": "protected/*",
+            "responses": [
+                {
+                    "uuid": "ff30ce59-a4cd-4c3c-8018-2446a690670d",
+                    "body": "{\n  \"error\": \"Unauthorized\"\n}",
+                    "latency": 0,
+                    "statusCode": 401,
+                    "label": "Requires the presence of an 'Authorization' header",
+                    "headers": [],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [
+                        {
+                            "target": "header",
+                            "modifier": "Authorization",
+                            "operator": "null",
+                            "invert": false,
+                            "value": ""
+                        }
+                    ],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id",
+                    "callbacks": []
+                }
+            ],
+            "responseMode": "FALLBACK"
+        },
+        {
+            "uuid": "37829f5d-c853-4fde-9464-c06ff450f082",
+            "type": "http",
+            "documentation": "Protected route",
+            "method": "get",
+            "endpoint": "protected/path",
+            "responses": [
+                {
+                    "uuid": "92956029-b804-4b86-82ad-43a340b3ed75",
+                    "body": "You can serve the same responses based on the same rules for all or part of your endpoints by creating global routes using the fallback mode and a wildcard path. \nThis is useful if you want to protect all your endpoints by checking if an Authorization header is present or if you want to verify that all your requests contain a specific property in their body.\nTo learn more: https://mockoon.com/docs/latest/route-responses/global-routes-with-rules/",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "text/plain"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id",
+                    "callbacks": []
+                }
+            ],
+            "responseMode": null
+        },
+        {
+            "method": "get",
+            "endpoint": "forward-and-record",
+            "documentation": "Can Mockoon forward or record entering requests?",
+            "responses": [
+                {
+                    "uuid": "eb4eba9d-6acf-4434-a8b2-f3aa3000ff0c",
+                    "body": "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings (\"Settings\" tab at the top). \nTo learn more: https://mockoon.com/docs/latest/server-configuration/proxy-mode/\n\nAll entering requests, and responses from the proxied server will be recorded and can be automatically mocked (\"Logs\" tab at the top).\nTo learn more: https://mockoon.com/docs/latest/logging-and-recording/requests-logging/",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "text/plain"
+                        }
+                    ],
+                    "bodyType": "INLINE",
+                    "filePath": "",
+                    "databucketID": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false,
+                    "default": false,
+                    "crudKey": "id",
+                    "callbacks": []
+                }
+            ],
+            "uuid": "9af048fc-dfe4-4ab7-bcc5-3e41dd53b980",
+            "type": "http",
+            "responseMode": null
+        }
+    ],
+    "rootChildren": [
+        {
+            "type": "route",
+            "uuid": "0807de7d-e3ad-4dd6-ac1c-5dd6fb40f840"
+        },
+        {
+            "type": "route",
+            "uuid": "131472d0-9f77-45d7-ad86-75bc301ef578"
+        },
+        {
+            "type": "route",
+            "uuid": "aadfb358-3156-4112-8cbc-ade5ed4777dd"
+        },
+        {
+            "type": "route",
+            "uuid": "40fa354a-b867-42c8-b92c-fa6fcd790827"
+        },
+        {
+            "type": "route",
+            "uuid": "bae427cb-4c84-41e7-a292-e4a278622fb6"
+        },
+        {
+            "type": "route",
+            "uuid": "37829f5d-c853-4fde-9464-c06ff450f082"
+        },
+        {
+            "type": "route",
+            "uuid": "9af048fc-dfe4-4ab7-bcc5-3e41dd53b980"
+        }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "proxyRemovePrefix": false,
+    "tlsOptions": {
+        "enabled": false,
+        "type": "CERT",
+        "pfxPath": "",
+        "certPath": "",
+        "keyPath": "",
+        "caPath": "",
+        "passphrase": ""
+    },
+    "cors": true,
+    "headers": [
+        {
+            "key": "Content-Type",
+            "value": "application/json"
+        },
+        {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+        },
+        {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+        },
+        {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+        }
+    ],
+    "proxyReqHeaders": [
+        {
+            "key": "",
+            "value": ""
+        }
+    ],
+    "proxyResHeaders": [
+        {
+            "key": "",
+            "value": ""
+        }
+    ],
+    "data": [
+        {
+            "uuid": "c57051fa-09e1-418f-a50b-c43127adcfb5",
+            "id": "jjuf",
+            "name": "Users",
+            "documentation": "",
+            "value": "[\n  {{#repeat 50}}\n  {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"username\": \"{{faker 'internet.userName'}}\"\n  }\n  {{/repeat}}\n]"
+        }
+    ],
+    "callbacks": []
+}
+
